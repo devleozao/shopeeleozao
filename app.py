@@ -90,8 +90,13 @@ def converter_shopee(url_original):
 # 4. Lógica do Mercado Livre / Mercado Pago
 def converter_mercadolivre(url_original):
     id_campanha = st.secrets["mercadolivre"]["id_campanha"]
+    
+    # Limpa rastreadores velhos do link original
     url_base = url_original.split('?')[0]
-    return f"{url_base}?camp={id_campanha}"
+    
+    # Monta o link com a sua estrutura exata de afiliado
+    link_convertido = f"{url_base}?matt_word=leozao_udi&matt_tool={id_campanha}"
+    return link_convertido
 
 # 5. Interface Principal
 url_input = st.text_input("Link Original:", placeholder="Cole o texto ou link aqui...")
