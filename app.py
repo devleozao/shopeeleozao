@@ -42,8 +42,8 @@ estilo_mobile = """
 """
 st.markdown(estilo_mobile, unsafe_allow_html=True)
 
-st.title("🔗 Gerador Rápido")
-st.write("Cole o link recebido no WhatsApp e gere o seu.")
+st.title("🔗 Gerador de link de afiliado do Leozão")
+st.write("Cole o link do seu produto shopee ou Mercado Pago para ajudar o Leozão")
 
 # 3. Lógica da API Shopee
 def converter_shopee(url_original):
@@ -87,7 +87,7 @@ def converter_shopee(url_original):
     except Exception as e:
         return f"Erro de conexão: {e}"
 
-# 4. Lógica do Mercado Livre
+# 4. Lógica do Mercado Livre / Mercado Pago
 def converter_mercadolivre(url_original):
     id_campanha = st.secrets["mercadolivre"]["id_campanha"]
     url_base = url_original.split('?')[0]
@@ -98,30 +98,29 @@ url_input = st.text_input("Link Original:", placeholder="Cole o texto ou link aq
 
 if st.button("🚀 Gerar Link", use_container_width=True):
     if url_input:
-        # Extrai apenas a URL, ignorando qualquer texto antes ou depois
         match = re.search(r'(https?://[^\s]+)', url_input)
         
         if match:
             url_limpa = match.group(1)
             
-            # Valida domínios curtos e originais da Shopee
             if re.search(r'(shopee\.|shope\.ee|shp\.ee)', url_limpa.lower()):
                 with st.spinner("Conectando..."):
                     link_final = converter_shopee(url_limpa)
                     
                 st.success("Shopee identificado! 🛍️")
                 st.code(link_final, language="text")
+                st.link_button("🔗 Abrir Link Gerado", link_final, use_container_width=True)
 
-            # Valida domínios curtos e originais do Mercado Livre
-            elif re.search(r'(mercadolivre\.|meli\.la)', url_limpa.lower()):
+            elif re.search(r'(mercadolivre\.|meli\.la|mercadopago\.)', url_limpa.lower()):
                 with st.spinner("Conectando..."):
                     link_final = converter_mercadolivre(url_limpa)
                     
-                st.success("Mercado Livre identificado! 🤝")
+                st.success("Mercado Pago/Livre identificado! 🤝")
                 st.code(link_final, language="text")
+                st.link_button("🔗 Abrir Link Gerado", link_final, use_container_width=True)
 
             else:
-                st.error("Link não reconhecido. Verifique se é da Shopee ou ML.")
+                st.error("Link não reconhecido. Verifique se é da Shopee ou Mercado Pago.")
         else:
             st.error("Nenhum link válido (http/https) foi encontrado no texto colado.")
     else:
